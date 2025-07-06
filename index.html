@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Madam Ji!</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="icon" href="cake.ico" />
+</head>
+<body>
+  <div class="balloon-container">
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+  </div>
+  
+  <div class="container">
+    <div class="cake">
+      <div class="candle">
+        <div class="flame"></div>
+      </div>
+    </div>
+    
+    <h1 class="glitter-text">🎉 Happy Birthday Madam Ji! 🎂</h1>
+    <div class="message">
+      <p>"Happy Birthday meri jaan! ❤️</p>
+      <p>Tera hona meri zindagi ka sabse khoobsurat hissa hai.</p>
+      <p>Teri muskurahat meri duniya hai aur tera saath meri taaqat.</p>
+      <p>Main dua karta hoon ki tera har din khushiyon se bhara ho.</p>
+      <p>Aur tu hamesha yunhi muskurati rahe.</p>
+      <p>Aaj ka din tere liye utna hi special ho jitni tu mere liye hai.</p>
+      <p>Love you forever 💕🎂🎉"</p>
+    </div>
+    
+    <div class="wishes">
+      <div class="wish"><i class="fas fa-heart"></i> Health</div>
+      <div class="wish"><i class="fas fa-star"></i> Happiness</div>
+      <div class="wish"><i class="fas fa-gem"></i> Prosperity</div>
+      <div class="wish"><i class="fas fa-smile"></i> Joy</div>
+    </div>
+    
+    <button onclick="playMusic()" class="music-btn">
+      <i class="fas fa-music"></i> Play Ed Sheeran - Sapphire
+    </button>
+    <div id="audioPlayer" style="margin-top: 20px;">
+      <audio id="birthdaySong" src="Sapphire.mp3" preload="auto" controls></audio>
+      <div class="audio-controls">
+        <div class="progress-container">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div class="time-display">
+          <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+        </div>
+        <div class="volume-control" style="margin-top: 10px;">
+          <label for="volume">Volume: </label>
+          <input type="range" id="volume" min="0" max="1" step="0.1" value="1" style="width: 100px;">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="confetti-container"></div>
+  
+  <script>
+    let isPlaying = false;
+    const audio = document.getElementById('birthdaySong');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeDisplay = document.getElementById('currentTime');
+    const durationDisplay = document.getElementById('duration');
+    
+    // Set up on DOM load
+    document.addEventListener('DOMContentLoaded', function () {
+      // Set balloon styles
+      const balloons = document.querySelectorAll('.balloon');
+      balloons.forEach((balloon, index) => {
+        balloon.style.left = (index * 15 + 5) + '%';
+        balloon.style.animationDelay = (Math.random() * 5) + 's';
+        balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 65%)`;
+      });
+
+      // Set duration
+      audio.addEventListener('loadedmetadata', function () {
+        durationDisplay.textContent = formatTime(audio.duration);
+      });
+
+      // Progress and time update
+      audio.addEventListener('timeupdate', function () {
+        updateProgress();
+        if (audio.currentTime >= 120) {
+          audio.pause();
+          isPlaying = false;
+          document.querySelector('.music-btn').innerHTML = '<i class="fas fa-music"></i> Play Ed Sheeran - Sapphire';
+          stopConfetti();
+        }
+      });
+
+      audio.addEventListener('ended', function () {
+        isPlaying = false;
+        document.querySelector('.music-btn').innerHTML = '<i class="fas fa-music"></i> Play Ed Sheeran - Sapphire';
+        stopConfetti();
+      });
+
+      document.getElementById('volume').addEventListener('input', function () {
+        audio.volume = this.value;
+      });
+    });
+
+    function playMusic() {
+      if (!isPlaying) {
+        audio.currentTime = 84;
+        audio.muted = false;
+        audio.volume = 1.0;
+
+        audio.play().then(() => {
+          isPlaying = true;
+          document.querySelector('.music-btn').innerHTML = '<i class="fas fa-pause"></i> Pause Music';
+          startConfetti();
+        }).catch(err => {
+          console.error('Audio play blocked:', err);
+          alert("Please click to allow audio to play.");
+        });
+      } else {
+        audio.pause();
+        isPlaying = false;
+        document.querySelector('.music-btn').innerHTML = '<i class="fas fa-music"></i> Play Ed Sheeran - Sapphire';
+        stopConfetti();
+      }
+    }
+
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    function updateProgress() {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressBar.style.width = percent + '%';
+      currentTimeDisplay.textContent = formatTime(audio.currentTime);
+    }
+
+    function startConfetti() {
+      const container = document.querySelector('.confetti-container');
+      container.innerHTML = '';
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        container.appendChild(confetti);
+      }
+    }
+
+    function stopConfetti() {
+      document.querySelector('.confetti-container').innerHTML = '';
+    }
+  </script>
+</body>
+</html>
